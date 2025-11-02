@@ -103,6 +103,7 @@ export const posSlice = createSlice({
     },
     clearInvoice: (state) => {
       state.invoice = null;
+      state.isSuccess = false;
     },
   },
   extraReducers: (builder) => {

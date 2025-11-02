@@ -5,6 +5,7 @@ import { addCustomer, reset } from '../redux/slices/customerSlice';
 import Layout from '../components/Layout';
 
 const AddCustomer = () => {
+  console.log("Inside add customer")
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoading, isSuccess, isError, message } = useSelector(

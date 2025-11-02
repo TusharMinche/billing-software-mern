@@ -15,7 +15,6 @@ const Customers = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   useEffect(() => {
-    console.log('🔍 Customers page mounted, fetching customers...');
     dispatch(getAllCustomers());
     return () => {
       dispatch(reset());
@@ -29,11 +28,7 @@ const Customers = () => {
   };
 
   const handleAddCustomer = () => {
-    console.log('🚀 Add Customer button clicked');
-    console.log('📍 Current path:', window.location.pathname);
-    console.log('➡️  Navigating to: /customers/add');
     navigate('/customers/add');
-    console.log('✅ Navigate called');
   };
 
   const filteredCustomers = customers.filter(
