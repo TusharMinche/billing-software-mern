@@ -5,7 +5,6 @@ import { addCustomer, reset } from '../redux/slices/customerSlice';
 import Layout from '../components/Layout';
 
 const AddCustomer = () => {
-  console.log("Inside add customer")
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoading, isSuccess, isError, message } = useSelector(
@@ -18,17 +17,18 @@ const AddCustomer = () => {
     email: '',
     address: '',
   });
+  
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const { name, phone, email, address } = formData;
 
   useEffect(() => {
-    if (isSuccess) {
+    // Only navigate if we explicitly set the flag from this component
+    if (shouldNavigate && isSuccess) {
       navigate('/customers');
-    }
-    return () => {
       dispatch(reset());
-    };
-  }, [isSuccess, navigate, dispatch]);
+    }
+  }, [shouldNavigate, isSuccess, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -37,9 +37,10 @@ const AddCustomer = () => {
     }));
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addCustomer(formData));
+    setShouldNavigate(true);
+    await dispatch(addCustomer(formData));
   };
 
   return (

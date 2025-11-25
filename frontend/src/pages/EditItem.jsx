@@ -22,6 +22,8 @@ const EditItem = () => {
     lowStockLimit: '',
     unit: 'pcs',
   });
+  
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const { name, sku, category, costPrice, sellingPrice, stockQty, lowStockLimit, unit } = formData;
 
@@ -48,10 +50,12 @@ const EditItem = () => {
   }, [item]);
 
   useEffect(() => {
-    if (isSuccess && !isLoading) {
+    // Only navigate if we explicitly set the flag from this component
+    if (shouldNavigate && isSuccess && !isLoading) {
       navigate('/inventory');
+      dispatch(reset());
     }
-  }, [isSuccess, isLoading, navigate]);
+  }, [shouldNavigate, isSuccess, isLoading, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -60,8 +64,9 @@ const EditItem = () => {
     }));
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    setShouldNavigate(true);
     
     const itemData = {
       ...formData,
@@ -71,7 +76,7 @@ const EditItem = () => {
       lowStockLimit: parseInt(lowStockLimit) || 5,
     };
     
-    dispatch(updateItem({ id, itemData }));
+    await dispatch(updateItem({ id, itemData }));
   };
 
   if (isLoading && !item) {

@@ -18,6 +18,8 @@ const EditCustomer = () => {
     email: '',
     address: '',
   });
+  
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const { name, phone, email, address } = formData;
 
@@ -40,10 +42,12 @@ const EditCustomer = () => {
   }, [customer]);
 
   useEffect(() => {
-    if (isSuccess && !isLoading) {
+    // Only navigate if we explicitly set the flag from this component
+    if (shouldNavigate && isSuccess && !isLoading) {
       navigate('/customers');
+      dispatch(reset());
     }
-  }, [isSuccess, isLoading, navigate]);
+  }, [shouldNavigate, isSuccess, isLoading, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -52,9 +56,10 @@ const EditCustomer = () => {
     }));
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateCustomer({ id, customerData: formData }));
+    setShouldNavigate(true);
+    await dispatch(updateCustomer({ id, customerData: formData }));
   };
 
   if (isLoading && !customer) {

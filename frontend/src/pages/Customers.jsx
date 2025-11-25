@@ -17,7 +17,8 @@ const Customers = () => {
   useEffect(() => {
     dispatch(getAllCustomers());
     return () => {
-      dispatch(reset());
+      if(window.location.pathname === "/customers")
+        dispatch(reset());
     };
   }, [dispatch]);
 
@@ -27,7 +28,11 @@ const Customers = () => {
     dispatch(getAllCustomers());
   };
 
-  const handleAddCustomer = () => {
+  // FIX: Prevent default behavior and use proper navigation
+  const handleAddCustomer = (e) => {
+    
+      e.preventDefault();
+      // e.stopPropagation();
     navigate('/customers/add');
   };
 
@@ -83,8 +88,9 @@ const Customers = () => {
               </div>
             </div>
 
-            {/* Add Customer Button */}
+            {/* Add Customer Button - FIX: Added type="button" */}
             <button
+              type="button"
               onClick={handleAddCustomer}
               className="flex items-center space-x-2 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
             >
@@ -210,6 +216,7 @@ const Customers = () => {
               </svg>
               <p className="text-gray-500 text-lg">No customers found</p>
               <button
+                type="button"
                 onClick={handleAddCustomer}
                 className="mt-4 text-indigo-600 hover:text-indigo-700 font-medium"
               >
@@ -279,13 +286,23 @@ const Customers = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
-                          onClick={() => navigate(`/customers/${customer._id}`)}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            navigate(`/customers/${customer._id}`);
+                          }}
                           className="text-indigo-600 hover:text-indigo-900 mr-4"
                         >
                           View
                         </button>
                         <button
-                          onClick={() => setDeleteConfirm(customer._id)}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setDeleteConfirm(customer._id);
+                          }}
                           className="text-red-600 hover:text-red-900"
                         >
                           Delete
@@ -312,12 +329,14 @@ const Customers = () => {
               </p>
               <div className="flex space-x-4">
                 <button
+                  type="button"
                   onClick={() => setDeleteConfirm(null)}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleDelete(deleteConfirm)}
                   className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                 >

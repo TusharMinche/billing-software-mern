@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getAllItems } from '../redux/slices/inventorySlice';
-import { getAllCustomers, addCustomer } from '../redux/slices/customerSlice';
+import { getAllCustomers, addCustomer, reset as resetCustomer } from '../redux/slices/customerSlice';
 import { createInvoice, reset, clearInvoice } from '../redux/slices/posSlice';
 import Layout from '../components/Layout';
 
 const POS = () => {
-  console.log("In pos");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.inventory);
@@ -246,10 +245,16 @@ const POS = () => {
   // Customer management
   const handleAddCustomer = async (e) => {
     e.preventDefault();
-    await dispatch(addCustomer(newCustomer));
-    await dispatch(getAllCustomers());
-    setNewCustomer({ name: '', phone: '', email: '', address: '' });
-    setShowAddCustomer(false);
+    const result = await dispatch(addCustomer(newCustomer));
+    
+    // Only refresh customer list if successful
+    if (result.type.includes('fulfilled')) {
+      await dispatch(getAllCustomers());
+      setNewCustomer({ name: '', phone: '', email: '', address: '' });
+      setShowAddCustomer(false);
+      // Immediately reset to prevent other components from reacting
+      dispatch(resetCustomer());
+    }
   };
 
   const selectCustomer = (customer) => {

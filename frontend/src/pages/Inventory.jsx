@@ -237,9 +237,14 @@ const Inventory = () => {
                 ))}
               </select>
 
-              {/* Add Item Button */}
+              {/* Add Item Button - FIX: Added type="button" */}
               <button
-                onClick={() => navigate('/inventory/add')}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate('/inventory/add');
+                }}
                 className="flex items-center space-x-2 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition whitespace-nowrap"
               >
                 <svg
@@ -284,6 +289,7 @@ const Inventory = () => {
               </svg>
               <p className="text-gray-500 text-lg">No items found</p>
               <button
+                type="button"
                 onClick={() => navigate('/inventory/add')}
                 className="mt-4 text-indigo-600 hover:text-indigo-700 font-medium"
               >
@@ -364,13 +370,23 @@ const Inventory = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
-                            onClick={() => navigate(`/inventory/edit/${item._id}`)}
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              navigate(`/inventory/edit/${item._id}`);
+                            }}
                             className="text-indigo-600 hover:text-indigo-900 mr-4"
                           >
                             Edit
                           </button>
                           <button
-                            onClick={() => setDeleteConfirm(item._id)}
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setDeleteConfirm(item._id);
+                            }}
                             className="text-red-600 hover:text-red-900"
                           >
                             Delete
@@ -395,12 +411,14 @@ const Inventory = () => {
               </p>
               <div className="flex space-x-4">
                 <button
+                  type="button"
                   onClick={() => setDeleteConfirm(null)}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
+                  type="button"
                   onClick={() => handleDelete(deleteConfirm)}
                   className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                 >
